@@ -1,8 +1,8 @@
 from logic import Model
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
-from PIL import Image, ImageTk
-import os
+from PIL import Image, ImageTk  # Importe a biblioteca Pillow
+
 
 class CustomTree(ttk.Treeview):
     def __init__(self, master=None, **kwargs):
@@ -15,7 +15,7 @@ class CustomTree(ttk.Treeview):
 
         for col in self["columns"]:
             self.heading(col, text=col)
-
+            
 class Application(tk.Tk):
     def __init__(self, model):
         super().__init__()
@@ -26,38 +26,16 @@ class Application(tk.Tk):
         self.geometry("800x600")
 
         # Defina as cores de fundo e de texto
-        dark_blue = "#001f3f"  # Azul escuro
-        light_blue = "#add8e6"  # Azul claro
-        button_bg_color = "#4682b4"  # Azul-ardósia médio para o fundo dos botões
-        title_bg_color = "#87ceeb"  # Azul-ardósia claro para o fundo dos títulos
+        bg_color = "#ffffff"  # Azul
+        fg_color = "#ffffff"  # Branco
 
-        self.configure(bg=dark_blue)  # Define a cor de fundo geral da janela
-        self.create_widgets(dark_blue, light_blue, button_bg_color, title_bg_color)
+        self.create_widgets(bg_color, fg_color)
 
-    def create_buttons_frame(self, button_bg_color):
-        self.buttons_frame = tk.Frame(self, bg=button_bg_color)
-        self.buttons_frame.pack(anchor="nw", padx=10, pady=(0, 5))
-
-        # Adicione uma imagem ao botão
-        script_dir = os.path.dirname(__file__)
-        image_path = os.path.join(script_dir, "csv.png")
-        select_image = Image.open(image_path)
-        select_image = select_image.resize((30, 30), resample=Image.BICUBIC)
-        select_image = ImageTk.PhotoImage(select_image)
-
-        # Configure um estilo para os botões antes de criar o botão
-        style = ttk.Style()
-        style.configure("Custom.TButton", background=button_bg_color, foreground="white")
-
-        self.select_button = ttk.Button(self.buttons_frame, text="Selecionar Arquivo CSV", command=self.select_csv, image=select_image, compound="left", style="Custom.TButton")
-        self.select_button.image = select_image
-        self.select_button.pack(side="top", pady=(5, 0))
-
-    def create_widgets(self, bg_color, fg_color, button_bg_color, title_bg_color):
-        self.create_header(title_bg_color)
-        self.create_buttons_frame(button_bg_color)
-        self.create_menu_button_frame(button_bg_color)
-        self.create_file_info_frame(title_bg_color)
+    def create_widgets(self, bg_color, fg_color):
+        self.create_header(bg_color)
+        self.create_buttons_frame(bg_color)
+        self.create_menu_button_frame(bg_color)
+        self.create_file_info_frame(bg_color)
         self.create_tree_frame(bg_color)
 
         self.bind("<Configure>", self.on_window_resize)
@@ -67,24 +45,37 @@ class Application(tk.Tk):
         self.header_label = ttk.Label(self, text="Tabela de Fornecedores", font=("Arial", 16, "bold"), background=bg_color, foreground="#ffffff")
         self.header_label.pack(pady=(10, 0))
 
-    def create_menu_button_frame(self, button_bg_color):
-        self.menu_button_frame = tk.Frame(self, bg=button_bg_color)
+    def create_buttons_frame(self, bg_color):
+        self.buttons_frame = tk.Frame(self, bg=bg_color)
+        self.buttons_frame.pack(anchor="nw", padx=10, pady=(0, 5))
+
+        # Adicione uma imagem ao botão
+        select_image = Image.open("C:\\Users\\lucas.silva\\Desktop\\Projetos_SFTW\\Python.Bi\\csv.png")
+        select_image = select_image.resize((30, 30), resample=Image.BICUBIC)
+        select_image = ImageTk.PhotoImage(select_image)
+
+        self.select_button = ttk.Button(self.buttons_frame, text="Selecionar Arquivo CSV", command=self.select_csv, image=select_image, compound="left")
+        self.select_button.image = select_image  # Mantenha uma referência para evitar que a imagem seja coletada pelo garbage collector
+        self.select_button.pack(side="top", pady=(5, 0))
+
+    def create_menu_button_frame(self, bg_color):
+        self.menu_button_frame = tk.Frame(self, bg=bg_color)
         self.menu_button_frame.pack(side="bottom", fill="x", padx=10, pady=10)
-        self.create_menu_buttons(button_bg_color)
+        self.create_menu_buttons(bg_color)
 
     def create_file_info_frame(self, bg_color):
-        self.file_info_frame = ttk.Frame(self, style="Custom.TFrame")
+        self.file_info_frame = ttk.Frame(self, padding=10, style="Custom.TFrame")
         self.file_info_frame["style"] = "Custom.TFrame"
         self.file_info_frame.pack(anchor="ne", padx=10, pady=(0, 5))
 
         self.file_name_label = ttk.Label(self.file_info_frame, text="Nome do arquivo: ", font=("Roboto", 10), anchor="e", style="Custom.TLabel")
-        self.file_name_label.grid(row=0, column=0, sticky="e")
+        self.file_name_label.pack(side="right")
 
         self.file_size_label = ttk.Label(self.file_info_frame, text="Tamanho do arquivo: ", font=("Roboto", 10), anchor="e", style="Custom.TLabel")
-        self.file_size_label.grid(row=0, column=1, padx=10, sticky="e")
+        self.file_size_label.pack(side="right", padx=10)
 
         self.file_modified_label = ttk.Label(self.file_info_frame, text="Data de modificação: ", font=("Roboto", 10), anchor="e", style="Custom.TLabel")
-        self.file_modified_label.grid(row=0, column=2, sticky="e")
+        self.file_modified_label.pack(side="right")
 
     def create_tree_frame(self, bg_color):
         self.tree_frame = tk.Frame(self, bg=bg_color)
@@ -101,7 +92,7 @@ class Application(tk.Tk):
         self.tree_frame.grid_columnconfigure(0, weight=1)
         self.tree_frame.grid_rowconfigure(0, weight=1)
 
-    def create_menu_buttons(self, button_bg_color):
+    def create_menu_buttons(self, bg_color):
         menu_buttons = [
             ("Botão 1", self.on_button1_click),
             ("Botão 2", self.on_button2_click),
@@ -116,7 +107,7 @@ class Application(tk.Tk):
         ]
 
         for text, command in menu_buttons:
-            button = ttk.Button(self.menu_button_frame, text=text, command=command, style="Custom.TButton", cursor="hand2", padding=5)
+            button = ttk.Button(self.menu_button_frame, text=text, command=command, style="TButton")
             button.pack(side="left", padx=5)
 
     def on_button1_click(self):
@@ -218,8 +209,9 @@ class Application(tk.Tk):
                 material = row.get("Material", "")
                 saldo = row.get("Soma de Saldo", "")
                 ultimo_um_pedido = row.get("Último UM pedido", "")
-                remessa_recente = row.get("Data de rem")
-                # Adicione as colunas restantes conforme necessário
+                remessa_recente = row.get("Data de remessa mais recente", "")
+                primeiro_fornecedor = row.get("Primeiro Fornecedor", "")
+                self.tree.insert("", "end", values=(material, saldo, ultimo_um_pedido, remessa_recente, primeiro_fornecedor))
 
 if __name__ == "__main__":
     model = Model()
