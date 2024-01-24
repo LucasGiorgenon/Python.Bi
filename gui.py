@@ -25,28 +25,27 @@ class Application(tk.Tk):
         self.title("Tabela de Fornecedores")
         self.geometry("800x600")
 
-        # Defina as cores de fundo e de texto
-        bg_color = "#ffffff"  # Azul
-        fg_color = "#ffffff"  # Branco
+        # Defina a cor padrão
+        default_color = "#dcdcdc"  # cinza claro
 
-        self.create_widgets(bg_color, fg_color)
+        self.create_widgets(default_color)
 
-    def create_widgets(self, bg_color, fg_color):
-        self.create_header(bg_color)
-        self.create_buttons_frame(bg_color)
-        self.create_menu_button_frame(bg_color)
-        self.create_file_info_frame(bg_color)
-        self.create_tree_frame(bg_color)
+    def create_widgets(self, default_color):
+        self.create_header(default_color)
+        self.create_buttons_frame(default_color)
+        self.create_menu_button_frame(default_color)
+        self.create_file_info_frame(default_color)
+        self.create_tree_frame(default_color)
 
         self.bind("<Configure>", self.on_window_resize)
         self.tree.bind("<Configure>", self.on_tree_resize)
 
-    def create_header(self, bg_color):
-        self.header_label = ttk.Label(self, text="Tabela de Fornecedores", font=("Arial", 16, "bold"), background=bg_color, foreground="#ffffff")
+    def create_header(self, default_color):
+        self.header_label = ttk.Label(self, text="Tabela de Fornecedores", font=("Arial", 16, "bold"), foreground="#000000")
         self.header_label.pack(pady=(10, 0))
 
-    def create_buttons_frame(self, bg_color):
-        self.buttons_frame = tk.Frame(self, bg=bg_color)
+    def create_buttons_frame(self, default_color):
+        self.buttons_frame = tk.Frame(self, )
         self.buttons_frame.pack(anchor="nw", padx=10, pady=(0, 5))
 
         # Adicione uma imagem ao botão
@@ -57,13 +56,14 @@ class Application(tk.Tk):
         self.select_button = ttk.Button(self.buttons_frame, text="Selecionar Arquivo CSV", command=self.select_csv, image=select_image, compound="left")
         self.select_button.image = select_image  # Mantenha uma referência para evitar que a imagem seja coletada pelo garbage collector
         self.select_button.pack(side="top", pady=(5, 0))
+        
 
-    def create_menu_button_frame(self, bg_color):
-        self.menu_button_frame = tk.Frame(self, bg=bg_color)
+    def create_menu_button_frame(self, default_color):
+        self.menu_button_frame = tk.Frame(self,)
         self.menu_button_frame.pack(side="bottom", fill="x", padx=10, pady=10)
-        self.create_menu_buttons(bg_color)
+        self.create_menu_buttons(self, )
 
-    def create_file_info_frame(self, bg_color):
+    def create_file_info_frame(self, default_color):
         self.file_info_frame = ttk.Frame(self, padding=10, style="Custom.TFrame")
         self.file_info_frame["style"] = "Custom.TFrame"
         self.file_info_frame.pack(anchor="ne", padx=10, pady=(0, 5))
@@ -77,8 +77,8 @@ class Application(tk.Tk):
         self.file_modified_label = ttk.Label(self.file_info_frame, text="Data de modificação: ", font=("Roboto", 10), anchor="e", style="Custom.TLabel")
         self.file_modified_label.pack(side="right")
 
-    def create_tree_frame(self, bg_color):
-        self.tree_frame = tk.Frame(self, bg=bg_color)
+    def create_tree_frame(self, default_color):
+        self.tree_frame = tk.Frame(self, bg=default_color)
         self.tree_frame.pack(fill="both", expand=True, padx=10, pady=10)
         self.tree_frame.grid_rowconfigure(0, weight=1)
 
@@ -92,7 +92,7 @@ class Application(tk.Tk):
         self.tree_frame.grid_columnconfigure(0, weight=1)
         self.tree_frame.grid_rowconfigure(0, weight=1)
 
-    def create_menu_buttons(self, bg_color):
+    def create_menu_buttons(self, default_color):
         menu_buttons = [
             ("Botão 1", self.on_button1_click),
             ("Botão 2", self.on_button2_click),
